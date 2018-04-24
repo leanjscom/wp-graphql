@@ -200,8 +200,15 @@ class Router {
 			'Content-Type'
 		] );
 
+		if (empty($_SERVER["HTTP_REFERER"])) {
+			$origin = "*";
+		} else {
+			$urlParts = parse_url($_SERVER["HTTP_REFERER"]);
+			$origin = $urlParts["scheme"]."://".$urlParts["host"].(empty($urlParts["port"])?"":(":".$urlParts["port"]));
+		}
+
 		$headers = [
-			'Access-Control-Allow-Origin'  => '*',
+			'Access-Control-Allow-Origin'  => $origin,
 			'Access-Control-Allow-Headers' => implode( ', ', $access_control_allow_headers ),
 			'Access-Control-Allow-Credentials' => 'true',
 			'Content-Type'                 => 'application/json ; charset=' . get_option( 'blog_charset' ),
